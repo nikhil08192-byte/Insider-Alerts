@@ -1,6 +1,0 @@
-brew install gh
-gh auth login
-# Choose: GitHub.com → HTTPS → Y (open browser) → Authorize → back to terminal
-gh auth status
-git config --global user.name "nikhil08192"
-git config --global user.email "nikhil08192@gmail.com"

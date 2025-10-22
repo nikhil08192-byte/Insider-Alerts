@@ -1,0 +1,33 @@
+name: Insider Alerts
+on:
+  schedule:
+    - cron: "30 19 * * 1-5"   # 19:30 London, Mon–Fri
+    - cron: "0 13 * * 1-5"    # 13:00 London, Mon–Fri
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Run alerts bot
+        run: python alerts_bot.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          MIN_BUY_USD: "100000"
+          ROLE_KEYWORDS: "CEO,CFO,Director"
+          ALERT_SCORE: "9"
+          ACCOUNT_EQUITY: "10000"
+          RISK_FRAC: "0.005"
+      - name: Save state
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-state
+          path: |
+            alerts_sent.json
+            positions.json
